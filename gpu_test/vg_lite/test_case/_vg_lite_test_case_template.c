@@ -1,0 +1,70 @@
+/*
+ * Copyright (C) 2025 Xiaomi Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*********************
+ *      INCLUDES
+ *********************/
+
+#include "../vg_lite_test_context.h"
+#include "../vg_lite_test_utils.h"
+
+/*********************
+ *      DEFINES
+ *********************/
+
+/**********************
+ *      TYPEDEFS
+ **********************/
+
+/**********************
+ *  STATIC PROTOTYPES
+ **********************/
+
+/**********************
+ *  STATIC VARIABLES
+ **********************/
+
+/**********************
+ *      MACROS
+ **********************/
+
+/**********************
+ *   GLOBAL FUNCTIONS
+ **********************/
+
+/**********************
+ *   STATIC FUNCTIONS
+ **********************/
+
+static vg_lite_error_t on_setup(struct vg_lite_test_context_s* ctx)
+{
+    /* Add your setup code here, such as allocating memory, initializing variables, etc. */
+    return VG_LITE_SUCCESS;
+}
+
+static vg_lite_error_t on_draw(struct vg_lite_test_context_s* ctx)
+{
+    /* Add your drawing code here, such as vg_lite_draw, vg_lite_blit, etc. */
+    return VG_LITE_SUCCESS;
+}
+
+static vg_lite_error_t on_teardown(struct vg_lite_test_context_s* ctx)
+{
+    /* Add your teardown code here, such as freeing memory, deinitializing variables, etc. */
+    return VG_LITE_SUCCESS;
+}
+
+VG_LITE_TEST_CASE_ITEM_DEF(template, NONE, "Add your test case instructions here.");
