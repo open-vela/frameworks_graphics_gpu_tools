@@ -1,0 +1,30 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the NuttX tools repository.
+#
+
+menuconfig GPU_TEST
+	bool "GPU Auto Test Framework"
+	depends on LIB_PNG
+	depends on ARCH_PERF_EVENTS
+	default n
+
+if GPU_TEST
+
+config GPU_TEST_PRIORITY
+	int "GPU Test task priority"
+	default 200
+
+config GPU_TEST_STACKSIZE
+	int "GPU Test stack size"
+	default 32768
+
+config GPU_TEST_VG_LITE_INCLUDE
+	string "VG-Lite header include path"
+	default ""
+
+config GPU_TEST_CUSTOM_INIT
+	bool "gpu custom init function"
+	default y
+
+endif # GPU_TEST
