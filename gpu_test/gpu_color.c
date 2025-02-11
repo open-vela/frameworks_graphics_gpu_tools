@@ -64,6 +64,12 @@ uint32_t gpu_color_format_get_bpp(gpu_color_format_t format)
     case GPU_COLOR_FORMAT_INDEX_8:
         return sizeof(uint8_t) * 8;
 
+    case GPU_COLOR_FORMAT_A4:
+        return 4;
+
+    case GPU_COLOR_FORMAT_A8:
+        return 8;
+
     default:
         GPU_LOG_ERROR("Unsupported color format: %d", format);
         break;

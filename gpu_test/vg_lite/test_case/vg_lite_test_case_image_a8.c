@@ -18,11 +18,9 @@
  *      INCLUDES
  *********************/
 
-#include "../../gpu_cache.h"
 #include "../vg_lite_test_context.h"
 #include "../vg_lite_test_path.h"
 #include "../vg_lite_test_utils.h"
-#include <string.h>
 
 /*********************
  *      DEFINES
@@ -121,16 +119,7 @@ static vg_lite_error_t on_setup(struct vg_lite_test_context_s* ctx)
 {
     vg_lite_buffer_t* image = vg_lite_test_context_alloc_src_buffer(ctx, 64, 64, VG_LITE_A8, VG_LITE_TEST_STRIDE_AUTO);
 
-    uint8_t* dst = image->memory;
-
-    /* Fill gradient image with alpha values */
-    for (int y = 0; y < image->height; y++) {
-        uint8_t alpha = y * 0xFF / image->height;
-        memset(dst, alpha, image->width);
-        dst += image->stride;
-    }
-
-    gpu_cache_flush(image->memory, image->stride * image->height);
+    vg_lite_test_fill_gray_gradient(image);
 
     vg_lite_test_path_t* path = vg_lite_test_context_init_path(ctx, VG_LITE_FP32);
     vg_lite_test_path_set_bounding_box(path, 0, 0, 64, 64);

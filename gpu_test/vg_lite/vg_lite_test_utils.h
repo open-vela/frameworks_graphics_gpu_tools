@@ -142,6 +142,12 @@ void vg_lite_test_transform_point(float* x, float* y, const vg_lite_matrix_t* ma
  */
 void vg_lite_test_transform_retangle(vg_lite_rectangle_t* rect, const vg_lite_matrix_t* matrix);
 
+/**
+ * @breif Fill a buffer with a gray gradient.
+ * @param buffer The buffer to be filled.
+ */
+void vg_lite_test_fill_gray_gradient(vg_lite_buffer_t* buffer);
+
 /**********************
  *      MACROS
  **********************/

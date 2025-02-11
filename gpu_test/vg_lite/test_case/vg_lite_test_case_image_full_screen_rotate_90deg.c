@@ -50,20 +50,6 @@
  *   STATIC FUNCTIONS
  **********************/
 
-static vg_lite_error_t clear_buffer(vg_lite_buffer_t* image, int x, vg_lite_color_t color)
-{
-    vg_lite_rectangle_t rect = {
-        .x = x,
-        .y = 0,
-        .width = image->width / 4,
-        .height = image->height,
-    };
-
-    VG_LITE_TEST_CHECK_ERROR_RETURN(vg_lite_clear(image, &rect, color));
-
-    return VG_LITE_SUCCESS;
-}
-
 static vg_lite_error_t on_setup(struct vg_lite_test_context_s* ctx)
 {
     vg_lite_buffer_t* target_buffer = vg_lite_test_context_get_target_buffer(ctx);
@@ -74,12 +60,7 @@ static vg_lite_error_t on_setup(struct vg_lite_test_context_s* ctx)
         VG_LITE_BGRA8888,
         VG_LITE_TEST_STRIDE_AUTO);
 
-    /* Draw 4 rectangles on the image */
-    VG_LITE_TEST_CHECK_ERROR_RETURN(clear_buffer(image, 0, 0xFFFFFFFF));
-    VG_LITE_TEST_CHECK_ERROR_RETURN(clear_buffer(image, image->width * 0.25f, 0xFFF00000));
-    VG_LITE_TEST_CHECK_ERROR_RETURN(clear_buffer(image, image->width * 0.50f, 0xFF00FF00));
-    VG_LITE_TEST_CHECK_ERROR_RETURN(clear_buffer(image, image->width * 0.75f, 0xFF0000FF));
-    VG_LITE_TEST_CHECK_ERROR_RETURN(vg_lite_finish());
+    vg_lite_test_fill_gray_gradient(image);
 
     return VG_LITE_SUCCESS;
 }

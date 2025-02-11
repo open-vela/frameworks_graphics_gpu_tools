@@ -20,6 +20,7 @@
 
 #include "vg_lite_test_utils.h"
 #include "../gpu_assert.h"
+#include "../gpu_cache.h"
 #include "../gpu_math.h"
 #include "../gpu_utils.h"
 #include <inttypes.h>
@@ -499,6 +500,8 @@ static enum gpu_color_format_e vg_lite_test_vg_format_to_gpu_format(vg_lite_buff
         COLOR_FORMAT_MATCH(BGRX8888);
         COLOR_FORMAT_MATCH(BGRA5658);
         COLOR_FORMAT_MATCH(INDEX_8);
+        COLOR_FORMAT_MATCH(A4);
+        COLOR_FORMAT_MATCH(A8);
 
     default:
         GPU_LOG_ERROR("unsupport color format: %d", (int)format);
@@ -522,7 +525,9 @@ static vg_lite_buffer_format_t vg_lite_test_gpu_format_to_vg_format(enum gpu_col
         COLOR_FORMAT_MATCH(BGRA8888);
         COLOR_FORMAT_MATCH(BGRX8888);
         COLOR_FORMAT_MATCH(BGRA5658);
-        COLOR_FORMAT_MATCH(INDEX_8)
+        COLOR_FORMAT_MATCH(INDEX_8);
+        COLOR_FORMAT_MATCH(A4);
+        COLOR_FORMAT_MATCH(A8);
 
     default:
         GPU_LOG_ERROR("unsupport color format: %d", (int)format);
@@ -532,4 +537,20 @@ static vg_lite_buffer_format_t vg_lite_test_gpu_format_to_vg_format(enum gpu_col
 #undef COLOR_FORMAT_MATCH
 
     return VG_LITE_BGRA8888;
+}
+
+void vg_lite_test_fill_gray_gradient(vg_lite_buffer_t* buffer)
+{
+    GPU_ASSERT_NULL(buffer);
+    GPU_ASSERT_NULL(buffer->memory);
+    uint8_t* dst = buffer->memory;
+
+    /* Fill gray gradient */
+    for (int y = 0; y < buffer->height; y++) {
+        uint8_t color = y * 0xFF / buffer->height;
+        memset(dst, color, buffer->stride);
+        dst += buffer->stride;
+    }
+
+    gpu_cache_flush(buffer->memory, buffer->stride * buffer->height);
 }
