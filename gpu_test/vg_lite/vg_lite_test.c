@@ -25,6 +25,7 @@
 #include "../gpu_tick.h"
 #include "vg_lite_test_context.h"
 #include "vg_lite_test_utils.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -95,31 +96,32 @@ static int vg_lite_test_name_to_index(const struct vg_lite_test_item_s** group, 
 
 static bool vg_lite_test_iter_next(struct vg_lite_test_iter_s* iter)
 {
-    iter->current_loop_count++;
+    bool retval = false;
 
     switch (iter->mode) {
     case GPU_TEST_MODE_DEFAULT: {
         /* Check if there is a specific test case to run */
         if (iter->name_to_index >= 0) {
-            if (iter->current_loop_count == 1) {
-                iter->item = iter->group[iter->name_to_index];
-                return true;
+            if (iter->current_loop_count > 0) {
+                return false;
             }
 
-            return false;
+            iter->item = iter->group[iter->name_to_index];
+            retval = true;
+            break;
         }
 
         if (iter->current_index >= iter->group_size) {
-            return false;
+            break;
         }
 
         iter->item = iter->group[iter->current_index++];
-        return true;
-    }
+        retval = true;
+    } break;
 
     case GPU_TEST_MODE_STRESS: {
         if (iter->failed_count > 0) {
-            return false;
+            break;
         }
 
         GPU_LOG_INFO("Test loop count: %d/%d", iter->current_loop_count, iter->total_loop_count);
@@ -130,15 +132,17 @@ static bool vg_lite_test_iter_next(struct vg_lite_test_iter_s* iter)
 
         iter->current_index = iter->name_to_index >= 0 ? iter->name_to_index : (rand() % iter->group_size);
         iter->item = iter->group[iter->current_index];
-        return true;
-    }
+        retval = true;
+    } break;
 
     default:
         GPU_LOG_ERROR("Unsupported test mode: %d", iter->mode);
         break;
     }
 
-    return false;
+    iter->current_loop_count++;
+
+    return retval;
 }
 
 static void vg_lite_test_run_group(struct gpu_test_context_s* ctx)
@@ -162,7 +166,7 @@ static void vg_lite_test_run_group(struct gpu_test_context_s* ctx)
     if (ctx->param.testcase_name && name_to_index < 0) {
         GPU_LOG_WARN("Test case not found: %s, Available test cases:", ctx->param.testcase_name);
         for (int i = 0; i < group_size; i++) {
-            GPU_LOG_WARN("[%d/%d]: %s", i, group_size, vg_lite_test_group[i]->name);
+            GPU_LOG_WARN("[%d/%d]: %s", i + 1, group_size, vg_lite_test_group[i]->name);
         }
         return;
     }
@@ -184,5 +188,9 @@ static void vg_lite_test_run_group(struct gpu_test_context_s* ctx)
 
     vg_lite_test_context_destroy(vg_lite_ctx);
 
-    GPU_LOG_WARN("Test result: %d failed / %d total", iter.failed_count, iter.current_loop_count - 1);
+    char buf[128];
+    snprintf(buf, sizeof(buf), "Test result: %d failed / %d total", iter.failed_count, iter.current_loop_count);
+    GPU_LOG_WARN("%s", buf);
+    gpu_recorder_write_string(ctx->recorder, "\n");
+    gpu_recorder_write_string(ctx->recorder, buf);
 }

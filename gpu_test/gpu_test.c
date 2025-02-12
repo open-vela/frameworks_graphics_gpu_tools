@@ -54,20 +54,11 @@ static void gpu_test_write_header(struct gpu_test_context_s* ctx);
 
 int gpu_test_run(struct gpu_test_context_s* ctx)
 {
-    switch (ctx->param.mode) {
-    case GPU_TEST_MODE_DEFAULT:
-        ctx->recorder = gpu_recorder_create(ctx->param.output_dir, "vg_lite");
-        gpu_test_write_header(ctx);
-        break;
+    ctx->recorder = gpu_recorder_create(ctx->param.output_dir, "vg_lite");
+    gpu_test_write_header(ctx);
 
-    case GPU_TEST_MODE_STRESS:
-        /* Seed the random number generator with the current time */
-        srand(gpu_tick_get());
-        break;
-
-    default:
-        break;
-    }
+    /* Seed the random number generator with the current time */
+    srand(gpu_tick_get());
 
     int ret = vg_lite_test_run(ctx);
 

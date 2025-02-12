@@ -161,7 +161,9 @@ bool vg_lite_test_context_run_item(struct vg_lite_test_context_s* ctx, const str
     if (item->feature != gcFEATURE_BIT_VG_NONE && !vg_lite_query_feature(item->feature)) {
         snprintf(ctx->vg_error_remark_text, sizeof(ctx->vg_error_remark_text), "Feature '%s' not supported", vg_lite_test_feature_string(item->feature));
         GPU_LOG_WARN("Skipping test case: %s %s", item->name, ctx->vg_error_remark_text);
-        vg_lite_test_context_record(ctx, item, VG_LITE_NOT_SUPPORT, "SKIP");
+        if (ctx->gpu_ctx->param.mode == GPU_TEST_MODE_DEFAULT) {
+            vg_lite_test_context_record(ctx, item, VG_LITE_NOT_SUPPORT, "SKIP");
+        }
         return true;
     }
 
@@ -201,7 +203,9 @@ bool vg_lite_test_context_run_item(struct vg_lite_test_context_s* ctx, const str
 
     bool passed = (error == VG_LITE_SUCCESS && screenshot_cmp_pass);
 
-    vg_lite_test_context_record(ctx, item, error, passed ? "PASS" : "FAIL");
+    if (ctx->gpu_ctx->param.mode == GPU_TEST_MODE_DEFAULT || !passed) {
+        vg_lite_test_context_record(ctx, item, error, passed ? "PASS" : "FAIL");
+    }
 
     return passed;
 }
