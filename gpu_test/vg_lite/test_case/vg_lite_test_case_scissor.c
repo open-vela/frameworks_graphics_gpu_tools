@@ -124,9 +124,6 @@ static vg_lite_error_t on_draw(struct vg_lite_test_context_s* ctx)
 
 static vg_lite_error_t on_teardown(struct vg_lite_test_context_s* ctx)
 {
-    /* Reset the scissor to the full screen */
-    vg_lite_buffer_t* target_buffer = vg_lite_test_context_get_target_buffer(ctx);
-    VG_LITE_TEST_CHECK_ERROR_RETURN(vg_lite_set_scissor(0, 0, target_buffer->width, target_buffer->height));
     return VG_LITE_SUCCESS;
 }
 
