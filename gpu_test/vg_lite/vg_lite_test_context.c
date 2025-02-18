@@ -342,6 +342,15 @@ static void vg_lite_test_context_cleanup(struct vg_lite_test_context_s* ctx)
     if (ctx->path) {
         vg_lite_test_path_reset(ctx->path, VG_LITE_FP32);
     }
+
+    if (vg_lite_query_feature(gcFEATURE_BIT_VG_SCISSOR)) {
+#if VGLITE_RELEASE_VERSION <= VGLITE_MAKE_VERSION(4, 0, 57)
+        VG_LITE_TEST_CHECK_ERROR(vg_lite_enable_scissor());
+#endif
+
+        /* Reset the scissor to the full screen */
+        VG_LITE_TEST_CHECK_ERROR(vg_lite_set_scissor(0, 0, ctx->target_buffer.width, ctx->target_buffer.height));
+    }
 }
 
 static void vg_lite_test_context_record(
