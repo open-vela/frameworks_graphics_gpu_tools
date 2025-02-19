@@ -76,7 +76,7 @@ struct gpu_test_context_s {
  * @brief Initialize the GPU test context.
  * @param ctx The GPU test context to initialize.
  */
-void gpu_test_context_setup(struct gpu_test_context_s* ctx);
+bool gpu_test_context_setup(struct gpu_test_context_s* ctx);
 
 /**
  * @brief Deinitialize the GPU test context.

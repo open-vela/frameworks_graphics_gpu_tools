@@ -55,6 +55,10 @@ static void gpu_test_write_header(struct gpu_test_context_s* ctx);
 int gpu_test_run(struct gpu_test_context_s* ctx)
 {
     ctx->recorder = gpu_recorder_create(ctx->param.output_dir, "vg_lite");
+    if (!ctx->recorder) {
+        return -1;
+    }
+
     gpu_test_write_header(ctx);
 
     /* Seed the random number generator with the current time */
@@ -62,9 +66,7 @@ int gpu_test_run(struct gpu_test_context_s* ctx)
 
     int ret = vg_lite_test_run(ctx);
 
-    if (ctx->recorder) {
-        gpu_recorder_delete(ctx->recorder);
-    }
+    gpu_recorder_delete(ctx->recorder);
 
     return ret;
 }
