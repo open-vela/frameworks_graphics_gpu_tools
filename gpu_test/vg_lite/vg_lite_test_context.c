@@ -93,11 +93,6 @@ struct vg_lite_test_context_s* vg_lite_test_context_create(struct gpu_test_conte
     GPU_ASSERT_NULL(ctx);
     memset(ctx, 0, sizeof(struct vg_lite_test_context_s));
     ctx->gpu_ctx = gpu_ctx;
-    vg_lite_identity(&ctx->matrix);
-    vg_lite_scale(
-        gpu_ctx->param.target_width / (float)GPU_TEST_DESIGN_WIDTH,
-        gpu_ctx->param.target_height / (float)GPU_TEST_DESIGN_HEIGHT,
-        &ctx->matrix);
 
     if (gpu_ctx->target_buffer.data) {
         GPU_LOG_INFO("Using external target buffer");
@@ -110,6 +105,13 @@ struct vg_lite_test_context_s* vg_lite_test_context_create(struct gpu_test_conte
             VG_LITE_BGRA8888,
             VG_LITE_TEST_STRIDE_AUTO);
     }
+
+    /* Scale the output image to the design resolution */
+    vg_lite_identity(&ctx->matrix);
+    vg_lite_scale(
+        ctx->target_buffer.width / (float)GPU_TEST_DESIGN_WIDTH,
+        ctx->target_buffer.height / (float)GPU_TEST_DESIGN_HEIGHT,
+        &ctx->matrix);
 
     if (ctx->gpu_ctx->recorder) {
         gpu_recorder_write_string(ctx->gpu_ctx->recorder,

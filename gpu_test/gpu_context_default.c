@@ -50,7 +50,7 @@
  *   GLOBAL FUNCTIONS
  **********************/
 
-void gpu_test_context_setup(struct gpu_test_context_s* ctx)
+bool gpu_test_context_setup(struct gpu_test_context_s* ctx)
 {
     GPU_ASSERT_NULL(ctx);
 
@@ -61,10 +61,14 @@ void gpu_test_context_setup(struct gpu_test_context_s* ctx)
     if (ctx->param.fbdev_path) {
         ctx->fb = gpu_fb_create(ctx->param.fbdev_path);
 
-        if (ctx->fb) {
-            gpu_fb_get_buffer(ctx->fb, &ctx->target_buffer);
+        if (!ctx->fb) {
+            return false;
         }
+
+        gpu_fb_get_buffer(ctx->fb, &ctx->target_buffer);
     }
+
+    return true;
 }
 
 void gpu_test_context_teardown(struct gpu_test_context_s* ctx)
