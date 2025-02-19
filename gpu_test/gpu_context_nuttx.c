@@ -60,16 +60,18 @@ static uint32_t g_cpu_freq_mhz = 0;
  *   GLOBAL FUNCTIONS
  **********************/
 
-void gpu_test_context_setup(struct gpu_test_context_s* ctx)
+bool gpu_test_context_setup(struct gpu_test_context_s* ctx)
 {
     GPU_ASSERT_NULL(ctx);
 
     if (ctx->param.fbdev_path) {
         ctx->fb = gpu_fb_create(ctx->param.fbdev_path);
 
-        if (ctx->fb) {
-            gpu_fb_get_buffer(ctx->fb, &ctx->target_buffer);
+        if (!ctx->fb) {
+            return false;
         }
+
+        gpu_fb_get_buffer(ctx->fb, &ctx->target_buffer);
     }
 
     static bool initialized = false;
@@ -81,7 +83,7 @@ void gpu_test_context_setup(struct gpu_test_context_s* ctx)
 
     if (initialized) {
         GPU_LOG_INFO("GPU already initialized");
-        return;
+        return true;
     }
 
     initialized = true;
@@ -107,8 +109,8 @@ void gpu_test_context_setup(struct gpu_test_context_s* ctx)
     GPU_LOG_INFO("CPU frequency: %" PRIu32 " MHz", g_cpu_freq_mhz);
 
     if (g_cpu_freq_mhz == 0) {
-        GPU_LOG_ERROR("Failed to calculate CPU frequency");
-        return;
+        GPU_LOG_ERROR("CPU frequency error");
+        goto failed;
     }
 
     cpu_freq_hz = g_cpu_freq_mhz * 1000000;
@@ -116,6 +118,15 @@ void gpu_test_context_setup(struct gpu_test_context_s* ctx)
     up_perf_init((void*)(uintptr_t)cpu_freq_hz);
 
     gpu_tick_set_cb(tick_get_cb);
+    return true;
+
+failed:
+    if (ctx->fb) {
+        gpu_fb_destroy(ctx->fb);
+        ctx->fb = NULL;
+    }
+
+    return false;
 }
 
 void gpu_test_context_teardown(struct gpu_test_context_s* ctx)

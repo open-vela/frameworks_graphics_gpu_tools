@@ -61,8 +61,16 @@ int main(int argc, char* argv[])
 {
     struct gpu_test_context_s ctx = { 0 };
     parse_commandline(argc, argv, &ctx.param);
-    gpu_dir_create(ctx.param.output_dir);
-    gpu_test_context_setup(&ctx);
+
+    if (gpu_dir_create(ctx.param.output_dir) != 0) {
+        return EXIT_FAILURE;
+    }
+
+    if (!gpu_test_context_setup(&ctx)) {
+        GPU_LOG_ERROR("Failed to setup test context");
+        return EXIT_FAILURE;
+    }
+
     int retval = gpu_test_run(&ctx);
     gpu_test_context_teardown(&ctx);
     return retval;
@@ -228,7 +236,8 @@ static void parse_commandline(int argc, char** argv, struct gpu_test_param_s* pa
             break;
 
         case '?':
-            GPU_LOG_WARN("Unknown option: %c", optopt);
+            GPU_LOG_ERROR("Unknown option: %c", optopt);
+            show_usage(argv[0], EXIT_FAILURE);
             break;
 
         default:
