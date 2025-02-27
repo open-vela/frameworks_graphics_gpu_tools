@@ -112,7 +112,7 @@ static bool vg_lite_test_iter_next(struct vg_lite_test_iter_s* iter)
         }
 
         if (iter->current_index >= iter->group_size) {
-            break;
+            return false;
         }
 
         iter->item = iter->group[iter->current_index++];

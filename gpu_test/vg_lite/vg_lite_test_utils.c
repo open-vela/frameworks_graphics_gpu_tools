@@ -547,7 +547,15 @@ void vg_lite_test_fill_gray_gradient(vg_lite_buffer_t* buffer)
 
     /* Fill gray gradient */
     for (int y = 0; y < buffer->height; y++) {
-        uint8_t color = y * 0xFF / buffer->height;
+        uint8_t color;
+
+        if (buffer->format == VG_LITE_A4) {
+            uint8_t color_a4 = y * (0xFF >> 4) / buffer->height;
+            color = (color_a4 << 4) | color_a4;
+        } else {
+            color = y * 0xFF / buffer->height;
+        }
+
         memset(dst, color, buffer->stride);
         dst += buffer->stride;
     }
