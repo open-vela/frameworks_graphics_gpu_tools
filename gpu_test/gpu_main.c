@@ -89,7 +89,7 @@ static void show_usage(const char* progname, int exitcode)
 {
     printf("\nUsage: %s"
            " -m <string> -o <string> -t <string> -s\n"
-           " --target <string> --loop-count <int> --cpu-freq <int> --fbdev <string>\\n",
+           " --target <string> --loop-count <int> --cpu-freq <int> --fbdev <string> --tolerance <int>\n",
         progname);
 
     printf("\nWhere:\n");
@@ -103,6 +103,7 @@ static void show_usage(const char* progname, int exitcode)
     printf("  --loop-count <int> Stress mode loop count, default is 10000.\n");
     printf("  --cpu-freq <int> CPU frequency in MHz, default is 0 (auto).\n");
     printf("  --fbdev <string> Framebuffer device path.\n");
+    printf("  --tolerance <int> Color deviation tolerance, default is 1.\n");
 
     exit(exitcode);
 }
@@ -173,6 +174,14 @@ static void parse_long_commandline(
         param->fbdev_path = optarg;
         break;
 
+    case 4:
+        param->color_tolerance = atoi(optarg);
+        if (param->color_tolerance < 0) {
+            GPU_LOG_ERROR("Color deviation tolerance error: %d", param->color_tolerance);
+            show_usage(argv[0], EXIT_FAILURE);
+        }
+        break;
+
     default:
         GPU_LOG_WARN("Unknown longindex: %d", longindex);
         show_usage(argv[0], EXIT_FAILURE);
@@ -197,6 +206,7 @@ static void parse_commandline(int argc, char** argv, struct gpu_test_param_s* pa
     param->target_width = GPU_TEST_DESIGN_WIDTH;
     param->target_height = GPU_TEST_DESIGN_WIDTH;
     param->run_loop_count = 10000;
+    param->color_tolerance = 1;
 
     int ch;
     int longindex = 0;
@@ -206,6 +216,7 @@ static void parse_commandline(int argc, char** argv, struct gpu_test_param_s* pa
         { "loop-count", required_argument, NULL, 0 },
         { "cpu-freq", required_argument, NULL, 0 },
         { "fbdev", required_argument, NULL, 0 },
+        { "tolerance", required_argument, NULL, 0 },
         { 0, 0, NULL, 0 }
     };
 
@@ -258,4 +269,5 @@ static void parse_commandline(int argc, char** argv, struct gpu_test_param_s* pa
     GPU_LOG_INFO("Loop count: %d", param->run_loop_count);
     GPU_LOG_INFO("CPU frequency: %d MHz (0 means auto)", param->cpu_freq);
     GPU_LOG_INFO("Framebuffer device: %s", param->fbdev_path);
+    GPU_LOG_INFO("Color deviation tolerance: %d", param->color_tolerance);
 }

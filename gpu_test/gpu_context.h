@@ -58,6 +58,7 @@ struct gpu_test_param_s {
     int target_height;
     int run_loop_count;
     int cpu_freq;
+    int color_tolerance;
     bool screenshot_en;
 };
 
