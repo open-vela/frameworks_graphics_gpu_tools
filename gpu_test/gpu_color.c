@@ -20,6 +20,7 @@
 
 #include "gpu_color.h"
 #include "gpu_log.h"
+#include <stdlib.h>
 
 /*********************
  *      DEFINES
@@ -76,6 +77,25 @@ uint32_t gpu_color_format_get_bpp(gpu_color_format_t format)
     }
 
     return 0;
+}
+
+bool gpu_color_bgra8888_compare(gpu_color_bgra8888_t color1, gpu_color_bgra8888_t color2, int tolerance)
+{
+    if (abs(color1.ch.red - color2.ch.red) > tolerance) {
+        return false;
+    }
+
+    if (abs(color1.ch.green - color2.ch.green) > tolerance) {
+        return false;
+    }
+
+    if (abs(color1.ch.blue - color2.ch.blue) > tolerance) {
+        return false;
+    }
+
+    /* Skip checking alpha channel */
+
+    return true;
 }
 
 /**********************

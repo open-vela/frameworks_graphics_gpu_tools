@@ -25,6 +25,7 @@ extern "C" {
  *      INCLUDES
  *********************/
 
+#include <stdbool.h>
 #include <stdint.h>
 
 /*********************
@@ -103,6 +104,14 @@ typedef struct gpu_color_bgra5658_u {
  * @return The number of bits per pixel for the given color format
  */
 uint32_t gpu_color_format_get_bpp(gpu_color_format_t format);
+
+/**
+ * @brief Compare two colors(bgra8888) for equality
+ * @param color1 The first color to compare
+ * @param color2 The second color to compare
+ * @return True if the colors are equal, false otherwise
+ */
+ bool gpu_color_bgra8888_compare(gpu_color_bgra8888_t color1, gpu_color_bgra8888_t color2, int tolerance);
 
 /**********************
  *      MACROS
