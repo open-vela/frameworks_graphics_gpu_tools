@@ -468,8 +468,7 @@ static bool vg_lite_test_context_check_screenshot(struct vg_lite_test_context_s*
             gpu_color_bgra8888_t loaded_pixel;
             loaded_pixel.full = gpu_buffer_get_pixel(loaded_buffer, x, y);
 
-            /* Skip checking alpha channel */
-            if (target_pixel.ch.red != loaded_pixel.ch.red || target_pixel.ch.green != loaded_pixel.ch.green || target_pixel.ch.blue != loaded_pixel.ch.blue) {
+            if (!gpu_color_bgra8888_compare(target_pixel, loaded_pixel, ctx->gpu_ctx->param.color_tolerance)) {
                 snprintf(ctx->screenshot_remark_text, sizeof(ctx->screenshot_remark_text),
                     "Pixel not match in (X%d Y%d) "
                     "target: 0x%08" PRIX32 "(A%d R%d G%d B%d) vs "
