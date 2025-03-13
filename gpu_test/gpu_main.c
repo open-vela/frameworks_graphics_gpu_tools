@@ -73,6 +73,13 @@ int main(int argc, char* argv[])
 
     int retval = gpu_test_run(&ctx);
     gpu_test_context_teardown(&ctx);
+
+    if (retval == 0) {
+        GPU_LOG_WARN("GPU Test PASSED");
+    } else {
+        GPU_LOG_ERROR("GPU Test FAILED: %d", retval);
+    }
+
     return retval;
 }
 

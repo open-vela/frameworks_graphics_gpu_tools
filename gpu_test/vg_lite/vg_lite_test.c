@@ -53,7 +53,7 @@ struct vg_lite_test_iter_s {
  *  STATIC PROTOTYPES
  **********************/
 
-static void vg_lite_test_run_group(struct gpu_test_context_s* ctx);
+static int vg_lite_test_run_group(struct gpu_test_context_s* ctx);
 
 /**********************
  *  STATIC VARIABLES
@@ -70,9 +70,7 @@ static void vg_lite_test_run_group(struct gpu_test_context_s* ctx);
 int vg_lite_test_run(struct gpu_test_context_s* ctx)
 {
     vg_lite_test_dump_info();
-    vg_lite_test_run_group(ctx);
-    GPU_LOG_INFO("GPU test finish");
-    return 0;
+    return vg_lite_test_run_group(ctx);
 }
 
 /**********************
@@ -145,7 +143,7 @@ static bool vg_lite_test_iter_next(struct vg_lite_test_iter_s* iter)
     return retval;
 }
 
-static void vg_lite_test_run_group(struct gpu_test_context_s* ctx)
+static int vg_lite_test_run_group(struct gpu_test_context_s* ctx)
 {
     /* Import testcase entry */
 
@@ -168,7 +166,7 @@ static void vg_lite_test_run_group(struct gpu_test_context_s* ctx)
         for (int i = 0; i < group_size; i++) {
             GPU_LOG_WARN("[%d/%d]: %s", i + 1, group_size, vg_lite_test_group[i]->name);
         }
-        return;
+        return -1;
     }
 
     struct vg_lite_test_iter_s iter = { 0 };
@@ -193,4 +191,6 @@ static void vg_lite_test_run_group(struct gpu_test_context_s* ctx)
     GPU_LOG_WARN("%s", buf);
     gpu_recorder_write_string(ctx->recorder, "\n");
     gpu_recorder_write_string(ctx->recorder, buf);
+
+    return iter.failed_count > 0 ? -1 : 0;
 }
