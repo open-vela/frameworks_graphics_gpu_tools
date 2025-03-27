@@ -95,7 +95,7 @@ def print_report(anomalies, pct_th, abs_th):
         print(
             f"\n\033[32mAll test cases normal (Threshold >{pct_th}% and ≥{abs_th}ms)\033[0m"
         )
-        return
+        return 0
 
     # Prepare table data
     table_data = []
@@ -121,6 +121,7 @@ def print_report(anomalies, pct_th, abs_th):
     ]
     print(f"\n\033[31mAnomalies found (Threshold >{pct_th}% and >{abs_th}ms):\033[0m")
     print(tabulate(table_data, headers=headers, tablefmt="grid"))
+    return 1
 
 
 def main():
@@ -158,11 +159,12 @@ def main():
         base = parse_csv(args.base)
         comp = parse_csv(args.compare)
         anomalies = compare_data(base, comp, args.pct_threshold, args.abs_threshold)
-        print_report(anomalies, args.pct_threshold, args.abs_threshold)
+        return print_report(anomalies, args.pct_threshold, args.abs_threshold)
 
     except Exception as e:
         print(f"\033[31mError: {str(e)}\033[0m")
+        return 1
 
 
 if __name__ == "__main__":
-    main()
+    exit(main())
