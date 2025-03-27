@@ -17,6 +17,7 @@ limitations under the License.
 from PIL import Image, ImageChops
 import argparse
 
+
 def main(image1_path, image2_path, output_path, highlight_color):
     try:
         # Open both images
@@ -24,7 +25,7 @@ def main(image1_path, image2_path, output_path, highlight_color):
         im2 = Image.open(image2_path)
     except IOError as e:
         print(f"Failed to open image: {e}")
-        return
+        return 1  # Return 1 to indicate an error
 
     # Compare the two images
     diff = ImageChops.difference(im1, im2)
@@ -45,17 +46,39 @@ def main(image1_path, image2_path, output_path, highlight_color):
         try:
             combined.save(output_path)
             print(f"Saved difference image: {output_path}")
+            return 1  # Return 1 to indicate a difference was found and saved
         except IOError as e:
             print(f"Failed to save image: {e}")
+            return 1  # Return 1 to indicate an error
     else:
         print(f"No difference: {image1_path}")
+        return 0  # Return 0 to indicate no difference was found
+
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Compare two images and highlight differences.")
-    parser.add_argument("-i", "--image1-path", type=str, required=True, help="Path to the first image")
-    parser.add_argument("-d", "--image2-path", type=str, required=True, help="Path to the second difference image")
-    parser.add_argument("-o", "--output-path", type=str, required=True, help="Path to save the output difference image")
-    parser.add_argument("-c", "--highlight-color", type=str, default="(255, 0, 0)", help="Highlight color in RGB format (default: (255, 0, 0))")
+    parser = argparse.ArgumentParser(
+        description="Compare two images and highlight differences."
+    )
+    parser.add_argument(
+        "-i", "--image1-path", type=str, required=True, help="Path to the first image"
+    )
+    parser.add_argument(
+        "-d", "--image2-path", type=str, required=True, help="Path to the second image"
+    )
+    parser.add_argument(
+        "-o",
+        "--output-path",
+        type=str,
+        required=True,  # Made the output path required for clarity
+        help="Path to save the output difference image",
+    )
+    parser.add_argument(
+        "-c",
+        "--highlight-color",
+        type=str,
+        default="(255, 0, 0)",
+        help="Highlight color in RGB format (default: (255, 0, 0))",
+    )
 
     args = parser.parse_args()
 
@@ -68,6 +91,6 @@ if __name__ == "__main__":
         print(f"Invalid highlight color format: {e}")
         exit(1)
 
-    # Call the main function with parsed arguments
-    main(args.image1_path, args.image2_path, args.output_path, highlight_color)
-
+    # Call the main function with parsed arguments and handle the return value
+    result = main(args.image1_path, args.image2_path, args.output_path, highlight_color)
+    exit(result)
