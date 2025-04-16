@@ -26,8 +26,7 @@ if(CONFIG_GPU_TEST)
   # Basic definitions
   add_definitions(
     -DGPU_TEST_CONTEXT_DEFAULT_DISABLE=1 -DGPU_TEST_CONTEXT_LINUX_DISABLE=1
-    -DGPU_TEST_CONTEXT_NUTTX_ENABLE=1 -DGPU_OUTPUT_DIR_DEFAULT="/data/gpu"
-    -DGPU_LOG_USE_SYSLOG=1)
+    -DGPU_TEST_CONTEXT_NUTTX_ENABLE=1 -DGPU_OUTPUT_DIR_DEFAULT="/data/gpu")
 
   # NuttX cache definitions
   add_definitions(
