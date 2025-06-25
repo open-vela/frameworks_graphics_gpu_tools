@@ -136,6 +136,14 @@ void vg_lite_test_context_load_src_image(
     uint32_t image_stride);
 
 /**
+ * @brief Load the source image from a file for the test case
+ * @param ctx The test context to use
+ * @param file_path The path of the image file to load
+ * @return True if the image was loaded successfully, false otherwise
+ */
+bool vg_lite_test_context_load_src_image_from_file(struct vg_lite_test_context_s* ctx, const char* file_path);
+
+/**
  * @brief Set the transform for the test case
  * @param ctx The test context to use
  * @param matrix The transform matrix to set

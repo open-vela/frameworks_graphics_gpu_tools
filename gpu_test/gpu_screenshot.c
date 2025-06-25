@@ -99,7 +99,7 @@ int gpu_screenshot_save(const char* path, const struct gpu_buffer_s* buffer)
             buffer->height,
             GPU_COLOR_FORMAT_BGR888,
             image.width * sizeof(gpu_color24_t),
-            8);
+            64);
 
         if (!temp_buffer) {
             GPU_LOG_ERROR("Failed to allocate temporary buffer for conversion");
@@ -141,7 +141,7 @@ struct gpu_buffer_s* gpu_screenshot_load(const char* path)
         return NULL;
     }
 
-    struct gpu_buffer_s* buffer = gpu_buffer_alloc(image.width, image.height, GPU_COLOR_FORMAT_BGRA8888, image.width * sizeof(uint32_t), 8);
+    struct gpu_buffer_s* buffer = gpu_buffer_alloc(image.width, image.height, GPU_COLOR_FORMAT_BGRA8888, image.width * sizeof(uint32_t), 64);
 
     image.format = PNG_FORMAT_BGRA;
 

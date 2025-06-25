@@ -148,6 +148,14 @@ void vg_lite_test_transform_retangle(vg_lite_rectangle_t* rect, const vg_lite_ma
  */
 void vg_lite_test_fill_gray_gradient(vg_lite_buffer_t* buffer);
 
+/**
+ * @breif Clear a buffer with a color.
+ * @param buffer The buffer to be cleared.
+ * @param rect The rectangle to be cleared.
+ * @param color The color to be used to clear the buffer.
+ */
+void vg_lite_test_clear(vg_lite_buffer_t* buffer, const vg_lite_rectangle_t* rect, uint32_t color);
+
 /**********************
  *      MACROS
  **********************/

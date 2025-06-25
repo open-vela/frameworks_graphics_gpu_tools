@@ -72,6 +72,7 @@ static void vg_lite_test_context_record(
     const char* result_str);
 static void vg_lite_test_context_error_to_remark(struct vg_lite_test_context_s* ctx, vg_lite_error_t error);
 static bool vg_lite_test_context_check_screenshot(struct vg_lite_test_context_s* ctx, const char* name);
+static void vg_lite_test_context_skip_item(struct vg_lite_test_context_s* ctx, const struct vg_lite_test_item_s* item);
 
 /**********************
  *  STATIC VARIABLES
@@ -162,10 +163,7 @@ bool vg_lite_test_context_run_item(struct vg_lite_test_context_s* ctx, const str
 
     if (item->feature != gcFEATURE_BIT_VG_NONE && !vg_lite_query_feature(item->feature)) {
         snprintf(ctx->vg_error_remark_text, sizeof(ctx->vg_error_remark_text), "Feature '%s' not supported", vg_lite_test_feature_string(item->feature));
-        GPU_LOG_WARN("Skipping test case: %s %s", item->name, ctx->vg_error_remark_text);
-        if (ctx->gpu_ctx->param.mode == GPU_TEST_MODE_DEFAULT) {
-            vg_lite_test_context_record(ctx, item, VG_LITE_NOT_SUPPORT, "SKIP");
-        }
+        vg_lite_test_context_skip_item(ctx, item);
         return true;
     }
 
@@ -176,6 +174,12 @@ bool vg_lite_test_context_run_item(struct vg_lite_test_context_s* ctx, const str
         uint32_t start_tick = gpu_tick_get();
         error = item->on_setup(ctx);
         ctx->setup_tick = gpu_tick_elaps(start_tick);
+    }
+
+    if (error == VG_LITE_NOT_SUPPORT) {
+        snprintf(ctx->vg_error_remark_text, sizeof(ctx->vg_error_remark_text), "Setup returned NOT_SUPPORT");
+        vg_lite_test_context_skip_item(ctx, item);
+        return true;
     }
 
     if (error == VG_LITE_SUCCESS) {
@@ -266,6 +270,38 @@ void vg_lite_test_context_load_src_image(
 
     /* Make sure the buffer is flushed to memory */
     gpu_cache_flush(buffer->memory, buffer->stride * buffer->height);
+}
+
+bool vg_lite_test_context_load_src_image_from_file(struct vg_lite_test_context_s* ctx, const char* file_path)
+{
+    GPU_ASSERT_NULL(ctx);
+    GPU_ASSERT_NULL(file_path);
+
+    /* Check if the source buffer is already created */
+    GPU_ASSERT(ctx->src_gpu_buffer == NULL);
+
+    char image_path[256];
+    snprintf(image_path, sizeof(image_path), "%s/%s", ctx->gpu_ctx->param.resource_dir, file_path);
+    struct gpu_buffer_s* image = gpu_screenshot_load(image_path);
+
+    if (!image) {
+        return false;
+    }
+
+    if (vg_lite_query_feature(gcFEATURE_BIT_VG_16PIXELS_ALIGN)) {
+        if (image->width % 16 != 0) {
+            GPU_LOG_ERROR("Image width %d is not 16 pixel aligned", (int)image->width);
+            gpu_buffer_free(image);
+            return false;
+        }
+    }
+
+    ctx->src_gpu_buffer = image;
+    vg_lite_test_gpu_buffer_to_vg_buffer(&ctx->src_buffer, image);
+
+    /* Make sure the buffer is flushed to memory */
+    gpu_cache_flush(image->data, image->stride * image->height);
+    return true;
 }
 
 void vg_lite_test_context_set_transform(struct vg_lite_test_context_s* ctx, const vg_lite_matrix_t* matrix)
@@ -492,4 +528,12 @@ static bool vg_lite_test_context_check_screenshot(struct vg_lite_test_context_s*
 failed:
     gpu_buffer_free(loaded_buffer);
     return retval;
+}
+
+static void vg_lite_test_context_skip_item(struct vg_lite_test_context_s* ctx, const struct vg_lite_test_item_s* item)
+{
+    GPU_LOG_WARN("Skipping test case: %s %s", item->name, ctx->vg_error_remark_text);
+    if (ctx->gpu_ctx->param.mode == GPU_TEST_MODE_DEFAULT) {
+        vg_lite_test_context_record(ctx, item, VG_LITE_NOT_SUPPORT, "SKIP");
+    }
 }

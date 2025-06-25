@@ -35,6 +35,11 @@
 #define GPU_OUTPUT_DIR_DEFAULT "./gpu"
 #endif
 
+#ifndef GPU_RESOURCE_DIR_DEFAULT
+#define GPU_RESOURCE_DIR_DEFAULT "./"
+#endif
+
+
 /**********************
  *      TYPEDEFS
  **********************/
@@ -95,13 +100,14 @@ int main(int argc, char* argv[])
 static void show_usage(const char* progname, int exitcode)
 {
     printf("\nUsage: %s"
-           " -m <string> -o <string> -t <string> -s\n"
+           " -m <string> -o <string> -r <string> -t <string> -s\n"
            " --target <string> --loop-count <int> --cpu-freq <int> --fbdev <string> --tolerance <int>\n",
         progname);
 
     printf("\nWhere:\n");
     printf("  -m <string> Test mode: default; stress.\n");
     printf("  -o <string> GPU report file output path, default is " GPU_OUTPUT_DIR_DEFAULT "\n");
+    printf("  -r <string> GPU resource file path, default is " GPU_RESOURCE_DIR_DEFAULT "\n");
     printf("  -t <string> Testcase name.\n");
     printf("  -s Enable screenshot.\n");
 
@@ -210,6 +216,7 @@ static void parse_commandline(int argc, char** argv, struct gpu_test_param_s* pa
     param->argv = argv;
     param->mode = GPU_TEST_MODE_DEFAULT;
     param->output_dir = GPU_OUTPUT_DIR_DEFAULT;
+    param->resource_dir = GPU_RESOURCE_DIR_DEFAULT;
     param->target_width = GPU_TEST_DESIGN_WIDTH;
     param->target_height = GPU_TEST_DESIGN_WIDTH;
     param->run_loop_count = 10000;
@@ -217,7 +224,7 @@ static void parse_commandline(int argc, char** argv, struct gpu_test_param_s* pa
 
     int ch;
     int longindex = 0;
-    const char* optstring = "m:o:t:sh";
+    const char* optstring = "m:o:r:t:sh";
     const struct option longopts[] = {
         { "target", required_argument, NULL, 0 },
         { "loop-count", required_argument, NULL, 0 },
@@ -239,6 +246,10 @@ static void parse_commandline(int argc, char** argv, struct gpu_test_param_s* pa
 
         case 'o':
             param->output_dir = optarg;
+            break;
+
+        case 'r':
+            param->resource_dir = optarg;
             break;
 
         case 't':
@@ -270,6 +281,7 @@ static void parse_commandline(int argc, char** argv, struct gpu_test_param_s* pa
 
     GPU_LOG_INFO("Test mode: %d", param->mode);
     GPU_LOG_INFO("Output DIR: %s", param->output_dir);
+    GPU_LOG_INFO("Resource DIR: %s", param->resource_dir);
     GPU_LOG_INFO("Target render image size: %dx%d", param->target_width, param->target_height);
     GPU_LOG_INFO("Testcase name: %s", param->testcase_name);
     GPU_LOG_INFO("Screenshot: %s", param->screenshot_en ? "enable" : "disable");

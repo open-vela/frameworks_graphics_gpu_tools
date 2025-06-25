@@ -562,3 +562,47 @@ void vg_lite_test_fill_gray_gradient(vg_lite_buffer_t* buffer)
 
     gpu_cache_flush(buffer->memory, buffer->stride * buffer->height);
 }
+
+void vg_lite_test_clear(vg_lite_buffer_t* buffer, const vg_lite_rectangle_t* rect, uint32_t color)
+{
+    GPU_ASSERT_NULL(buffer);
+    GPU_ASSERT_NULL(buffer->memory);
+
+    vg_lite_rectangle_t local_rect;
+    if (rect == NULL) {
+        local_rect.x = 0;
+        local_rect.y = 0;
+        local_rect.width = buffer->width;
+        local_rect.height = buffer->height;
+        rect = &local_rect;
+    }
+
+    if (buffer->format != VG_LITE_BGRA8888 && buffer->format != VG_LITE_BGRX8888) {
+        GPU_LOG_ERROR("unsupport color format: %d", (int)buffer->format);
+        return;
+    }
+
+    uint8_t* dst = buffer->memory;
+
+    for (int y = 0; y < buffer->height; y++) {
+        if (y < rect->y || y >= rect->y + rect->height) {
+            dst += buffer->stride;
+            continue;
+        }
+
+        uint32_t* dst_pixel = (uint32_t*)dst;
+        for (int x = 0; x < buffer->width; x++) {
+            if (x < rect->x || x >= rect->x + rect->width) {
+                dst_pixel++;
+                continue;
+            }
+
+            *dst_pixel = color;
+            dst_pixel++;
+        }
+
+        dst += buffer->stride;
+    }
+
+    gpu_cache_flush(buffer->memory, buffer->stride * buffer->height);
+}

@@ -52,6 +52,7 @@ struct gpu_test_param_s {
     char** argv;
     enum gpu_test_mode_e mode;
     const char* output_dir;
+    const char* resource_dir;
     const char* testcase_name;
     const char* fbdev_path;
     int target_width;
