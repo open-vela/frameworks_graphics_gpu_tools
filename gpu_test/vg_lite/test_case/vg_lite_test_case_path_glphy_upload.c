@@ -18,9 +18,9 @@
  *      INCLUDES
  *********************/
 
-#include "../resource/glphy_paths.h"
 #include "../vg_lite_test_context.h"
 #include "../vg_lite_test_utils.h"
+#include "../resource/glphy_paths.h"
 
 /*********************
  *      DEFINES
@@ -59,6 +59,7 @@ static vg_lite_error_t on_setup(struct vg_lite_test_context_s* ctx)
         VG_LITE_HIGH,
         sizeof(glphy_u9f8d_path_data),
         (void*)glphy_u9f8d_path_data, -10000, -10000, 10000, 10000));
+    VG_LITE_TEST_CHECK_ERROR_RETURN(vg_lite_upload_path(&path));
 
     vg_lite_test_context_set_user_data(ctx, &path);
     return VG_LITE_SUCCESS;
@@ -93,7 +94,10 @@ static vg_lite_error_t on_draw(struct vg_lite_test_context_s* ctx)
 
 static vg_lite_error_t on_teardown(struct vg_lite_test_context_s* ctx)
 {
+    vg_lite_path_t * path = vg_lite_test_context_get_user_data(ctx);
+    VG_LITE_TEST_CHECK_ERROR_RETURN(vg_lite_clear_path(path));
+
     return VG_LITE_SUCCESS;
 }
 
-VG_LITE_TEST_CASE_ITEM_DEF(path_glphy, NONE, "Draw 5x '龍' (size 40x40) glphy paths");
+VG_LITE_TEST_CASE_ITEM_DEF(path_glphy_upload, NONE, "Draw 5x '龍' (size 40x40) glphy paths by upload function");
