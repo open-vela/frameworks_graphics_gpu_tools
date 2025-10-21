@@ -4,7 +4,7 @@
 #
 
 menuconfig GPU_TEST
-	bool "GPU Auto Test Framework"
+	tristate "GPU Auto Test Framework"
 	depends on LIB_PNG
 	depends on ARCH_PERF_EVENTS
 	default n
