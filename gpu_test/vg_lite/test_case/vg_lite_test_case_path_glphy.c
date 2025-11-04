@@ -67,7 +67,7 @@ static vg_lite_error_t on_setup(struct vg_lite_test_context_s* ctx)
 static vg_lite_error_t on_draw(struct vg_lite_test_context_s* ctx)
 {
 
-    vg_lite_path_t * path = vg_lite_test_context_get_user_data(ctx);
+    vg_lite_path_t* path = vg_lite_test_context_get_user_data(ctx);
 
     vg_lite_matrix_t matrix;
     vg_lite_test_context_get_transform(ctx, &matrix);

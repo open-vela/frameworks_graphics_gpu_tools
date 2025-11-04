@@ -44,7 +44,7 @@ struct gpu_test_context_s;
  * @param ctx The GPU test context
  * @return 0 on success, -1 on failure
  */
-int gpu_test_run(struct gpu_test_context_s *ctx);
+int gpu_test_run(struct gpu_test_context_s* ctx);
 
 /**********************
  *      MACROS

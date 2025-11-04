@@ -111,7 +111,7 @@ uint32_t gpu_color_format_get_bpp(gpu_color_format_t format);
  * @param color2 The second color to compare
  * @return True if the colors are equal, false otherwise
  */
- bool gpu_color_bgra8888_compare(gpu_color_bgra8888_t color1, gpu_color_bgra8888_t color2, int tolerance);
+bool gpu_color_bgra8888_compare(gpu_color_bgra8888_t color1, gpu_color_bgra8888_t color2, int tolerance);
 
 /**********************
  *      MACROS

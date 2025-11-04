@@ -19,8 +19,8 @@
  *********************/
 #include "../../gpu_cache.h"
 #include "../vg_lite_test_context.h"
-#include "../vg_lite_test_utils.h"
 #include "../vg_lite_test_path.h"
+#include "../vg_lite_test_utils.h"
 
 /*********************
  *      DEFINES
@@ -80,7 +80,7 @@ static vg_lite_error_t on_setup(struct vg_lite_test_context_s* ctx)
 {
     vg_lite_buffer_t* image = vg_lite_test_context_alloc_src_buffer(ctx, 90, 92, VG_LITE_BGRA8888, VG_LITE_TEST_STRIDE_AUTO);
     gpu_cache_flush(image->memory, image->stride * image->height);
-    vg_lite_rectangle_t rec = {0, 2, 90, 90};
+    vg_lite_rectangle_t rec = { 0, 2, 90, 90 };
     VG_LITE_TEST_CHECK_ERROR_RETURN(vg_lite_clear(image, &rec, 0xFF0000FF));
     VG_LITE_TEST_CHECK_ERROR_RETURN(vg_lite_finish());
 
@@ -96,7 +96,6 @@ static vg_lite_error_t on_setup(struct vg_lite_test_context_s* ctx)
     vg_lite_test_path_close(path);
     vg_lite_test_path_end(path);
 
-
     return VG_LITE_SUCCESS;
 }
 
@@ -104,7 +103,7 @@ static vg_lite_error_t on_draw(struct vg_lite_test_context_s* ctx)
 {
     vg_lite_buffer_t* image = vg_lite_test_context_get_src_buffer(ctx);
 
-    draw_image(ctx,  image, 0, 0, 0);
+    draw_image(ctx, image, 0, 0, 0);
 
     return VG_LITE_SUCCESS;
 }

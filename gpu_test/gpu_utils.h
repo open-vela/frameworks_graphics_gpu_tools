@@ -36,7 +36,7 @@ extern "C" {
 #endif
 
 #define GPU_ALIGN_UP(number, align_bytes) \
-    ((((uintptr_t)number) + ((align_bytes) - 1)) & ~(((uintptr_t)align_bytes) - 1))
+    ((((uintptr_t)number) + ((align_bytes)-1)) & ~(((uintptr_t)align_bytes) - 1))
 
 /**********************
  *      TYPEDEFS

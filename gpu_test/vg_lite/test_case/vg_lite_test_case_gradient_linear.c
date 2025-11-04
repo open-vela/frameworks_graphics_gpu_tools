@@ -20,8 +20,8 @@
 
 #include "../../gpu_math.h"
 #include "../vg_lite_test_context.h"
-#include "../vg_lite_test_utils.h"
 #include "../vg_lite_test_path.h"
+#include "../vg_lite_test_utils.h"
 #include <string.h>
 
 /*********************

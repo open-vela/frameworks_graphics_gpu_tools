@@ -18,9 +18,9 @@
  *      INCLUDES
  *********************/
 
+#include "../resource/glphy_paths.h"
 #include "../vg_lite_test_context.h"
 #include "../vg_lite_test_utils.h"
-#include "../resource/glphy_paths.h"
 
 /*********************
  *      DEFINES
@@ -68,7 +68,7 @@ static vg_lite_error_t on_setup(struct vg_lite_test_context_s* ctx)
 static vg_lite_error_t on_draw(struct vg_lite_test_context_s* ctx)
 {
 
-    vg_lite_path_t * path = vg_lite_test_context_get_user_data(ctx);
+    vg_lite_path_t* path = vg_lite_test_context_get_user_data(ctx);
 
     vg_lite_matrix_t matrix;
     vg_lite_test_context_get_transform(ctx, &matrix);
@@ -94,7 +94,7 @@ static vg_lite_error_t on_draw(struct vg_lite_test_context_s* ctx)
 
 static vg_lite_error_t on_teardown(struct vg_lite_test_context_s* ctx)
 {
-    vg_lite_path_t * path = vg_lite_test_context_get_user_data(ctx);
+    vg_lite_path_t* path = vg_lite_test_context_get_user_data(ctx);
     VG_LITE_TEST_CHECK_ERROR_RETURN(vg_lite_clear_path(path));
 
     return VG_LITE_SUCCESS;

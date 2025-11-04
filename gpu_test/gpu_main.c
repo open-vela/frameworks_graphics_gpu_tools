@@ -39,7 +39,6 @@
 #define GPU_RESOURCE_DIR_DEFAULT "./"
 #endif
 
-
 /**********************
  *      TYPEDEFS
  **********************/
